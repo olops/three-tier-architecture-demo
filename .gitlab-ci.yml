@@ -1,6 +1,5 @@
 
 stages:
-  - build
   - unittest
   - integtest
   - analysis
@@ -11,6 +10,77 @@ stages:
 variables:
   RS_RELEASE_VERSION: "1.0"
   RS_VERSION: $RS_RELEASE_VERSION.$CI_PIPELINE_ID
+
+.sonar_scan:
+  stage: analysis
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+    GIT_DEPTH: "0"
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script:
+    - cd $TARGET_PROJECT
+    - sonar-scanner -Dsonar.host.url=https://sonarqube.gaudiy-bongalos.com -Dsonar.projectName=rs-$TARGET_PROJECT -Dsonar.projectKey=rs-$TARGET_PROJECT -Dsonar.login=$SONAR_TOKEN -Dsonar.qualitygate.wait=true
+
+sonar_scan_cart:
+  extends: .sonar_scan
+  variables:
+    TARGET_PROJECT: cart
+
+sonar_scan_catalogue:
+  extends: .sonar_scan
+  variables:
+    TARGET_PROJECT: catalogue
+
+sonar_scan_dispatch:
+  extends: .sonar_scan
+  variables:
+    TARGET_PROJECT: dispatch
+
+sonar_scan_mongo:
+  extends: .sonar_scan
+  variables:
+    TARGET_PROJECT: mongo
+
+sonar_scan_mysql:
+  extends: .sonar_scan
+  variables:
+    TARGET_PROJECT: mysql
+
+sonar_scan_payment:
+  extends: .sonar_scan
+  variables:
+    TARGET_PROJECT: payment
+
+sonar_scan_ratings:
+  extends: .sonar_scan
+  variables:
+    TARGET_PROJECT: ratings
+
+sonar_scan_shipping:
+  extends: .sonar_scan
+  image: maven:3.9.3-eclipse-temurin-17
+  variables:
+    TARGET_PROJECT: shipping
+  script:
+    - cd $TARGET_PROJECT
+    - mvn package
+    - mvn sonar:sonar -Dsonar.host.url=https://sonarqube.gaudiy-bongalos.com -Dsonar.projectName=rs-shipping -Dsonar.projectKey=rs-shipping -Dsonar.login=$SONAR_TOKEN -Dsonar.language=java -Dsonar.sources=src -Dsonar.qualitygate.wait=true
+
+sonar_scan_user:
+  extends: .sonar_scan
+  variables:
+    TARGET_PROJECT: user
+
+sonar_scan_web:
+  extends: .sonar_scan
+  variables:
+    TARGET_PROJECT: web
 
 .build_image:
   stage: package
@@ -28,16 +98,22 @@ build_cart_image:
   extends: .build_image
   variables:
     IMAGE_BUILD_CONTEXT: cart
+  needs:
+    - sonar_scan_cart
 
 build_catalogue_image:
   extends: .build_image
   variables:
     IMAGE_BUILD_CONTEXT: catalogue
+  needs:
+    - sonar_scan_catalogue
 
 build_dispatch_image:
   extends: .build_image
   variables:
     IMAGE_BUILD_CONTEXT: dispatch
+  needs:
+    - sonar_scan_dispatch
 
 build_loadgen_image:
   extends: .build_image
@@ -48,36 +124,50 @@ build_mongo_image:
   extends: .build_image
   variables:
     IMAGE_BUILD_CONTEXT: mongo
+  needs:
+    - sonar_scan_mongo
 
 build_mysql_image:
   extends: .build_image
   variables:
     IMAGE_BUILD_CONTEXT: mysql
+  needs:
+    - sonar_scan_mysql
 
 build_payment_image:
   extends: .build_image
   variables:
     IMAGE_BUILD_CONTEXT: payment
+  needs:
+    - sonar_scan_payment
 
 build_ratings_image:
   extends: .build_image
   variables:
     IMAGE_BUILD_CONTEXT: ratings
+  needs:
+    - sonar_scan_ratings
 
 build_shipping_image:
   extends: .build_image
   variables:
     IMAGE_BUILD_CONTEXT: shipping
+  needs:
+    - sonar_scan_shipping
 
 build_user_image:
   extends: .build_image
   variables:
     IMAGE_BUILD_CONTEXT: user
+  needs:
+    - sonar_scan_user
 
 build_web_image:
   extends: .build_image
   variables:
     IMAGE_BUILD_CONTEXT: web
+  needs:
+    - sonar_scan_web
 
 build_helm_chart:
   stage: package
@@ -104,7 +194,7 @@ build_helm_chart:
     - helm repo add --username gitlab-ci-token --password ${CI_JOB_TOKEN} ${CI_PROJECT_NAME} ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/devel
     - helm cm-push robot-shop-$RS_VERSION.tgz $CI_PROJECT_NAME
 
-scan_helm_chart:
+trivy_scan_helm_chart:
   stage: package_scan
   image:
     name: docker.io/aquasec/trivy:latest
@@ -124,9 +214,9 @@ deploy_app:
     name: alpine/k8s:1.31.2
     entrypoint: ['']
   needs:
-    - scan_helm_chart
+    - trivy_scan_helm_chart
   script:
-    - kubectl config use-context $CI_PROJECT_PATH:test
+    - kubectl config use-context $CI_PROJECT_PATH:default
     - kubectl create namespace robot-shop --dry-run=client -o yaml | kubectl apply -f -
     - kubectl create secret docker-registry regcred --docker-server=registry.gaudiy-bongalos.com --docker-username=gitlab-ci-token --docker-password=$CI_JOB_TOKEN -n robot-shop --dry-run=client -o yaml | kubectl apply -f -
     - helm repo add --username gitlab-ci-token --password ${CI_JOB_TOKEN} ${CI_PROJECT_NAME} ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/devel
