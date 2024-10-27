@@ -1,0 +1,8 @@
+
+registry.gaudiy-bongalos.com/demo/three-tier-architecture-demo/rs-web:e7175cc7
+
+# https://stackoverflow.com/questions/59456507/kubernetes-gitlab-how-to-store-password-for-private-registry
+# https://docs.gitlab.com/ee/user/packages/container_registry/authenticate_with_container_registry.html
+# https://stackoverflow.com/questions/75112261/connect-kubernetes-to-gitlab-container-registry
+
+kubectl create secret docker-registry regcred --docker-server=registry.gaudiy-bongalos.com --docker-username=rs --docker-password=gldt-it8QayozgzZoz38nuCdS -n robot-shop

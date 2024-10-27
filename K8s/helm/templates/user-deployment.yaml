@@ -14,6 +14,8 @@ spec:
       labels:
         service: user
     spec:
+      imagePullSecrets:
+      - name: regcred
       {{ if .Values.psp.enabled }}
       serviceAccountName: robot-shop
       {{ end }}
