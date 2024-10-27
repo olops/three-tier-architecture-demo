@@ -5,6 +5,7 @@ stages:
   - integtest
   - analysis
   - package
+  - package_scan
   - deploy
 
 variables:
@@ -103,13 +104,27 @@ build_helm_chart:
     - helm repo add --username gitlab-ci-token --password ${CI_JOB_TOKEN} ${CI_PROJECT_NAME} ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/devel
     - helm cm-push robot-shop-$RS_VERSION.tgz $CI_PROJECT_NAME
 
+scan_helm_chart:
+  stage: package_scan
+  image:
+    name: docker.io/aquasec/trivy:latest
+    entrypoint: [""]
+  variables:
+    TRIVY_NO_PROGRESS: "true"
+    TRIVY_CACHE_DIR: ".trivycache/"
+  needs:
+    - build_helm_chart
+  script:
+    - trivy config --quiet --exit-code 0 K8s/helm
+    - trivy config --quiet --exit-code 1 --severity CRITICAL K8s/helm
+
 deploy_app:
   stage: deploy
   image:
     name: alpine/k8s:1.31.2
     entrypoint: ['']
   needs:
-    - build_helm_chart
+    - scan_helm_chart
   script:
     - kubectl config use-context $CI_PROJECT_PATH:test
     - kubectl create namespace robot-shop --dry-run=client -o yaml | kubectl apply -f -
