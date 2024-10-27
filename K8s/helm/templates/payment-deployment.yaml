@@ -17,6 +17,8 @@ spec:
         service: payment
         stage: prod
     spec:
+      imagePullSecrets:
+      - name: regcred
       {{ if .Values.psp.enabled }}
       serviceAccountName: robot-shop
       {{ end }}

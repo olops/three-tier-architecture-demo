@@ -14,12 +14,14 @@ spec:
       labels:
         service: mongodb
     spec:
+      imagePullSecrets:
+      - name: regcred
       {{ if .Values.psp.enabled }}
       serviceAccountName: robot-shop
       {{ end }}
       containers:
       - name: mongodb
-        image: {{ .Values.image.repo }}/rs-mongodb:{{ .Values.image.version }}
+        image: {{ .Values.image.repo }}/rs-mongo:{{ .Values.image.version }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: 27017

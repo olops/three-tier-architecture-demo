@@ -1,0 +1,118 @@
+
+stages:
+  - build
+  - unittest
+  - integtest
+  - analysis
+  - package
+  - deploy
+
+variables:
+  RS_RELEASE_VERSION: "1.0"
+  RS_VERSION: $RS_RELEASE_VERSION.$CI_PIPELINE_ID
+
+.build_image:
+  stage: package
+  image:
+    name: gcr.io/kaniko-project/executor:v1.23.2-debug
+    entrypoint: [""]
+  script:
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}/${IMAGE_BUILD_CONTEXT}"
+      --cache=true
+      --cache-ttl=168h
+      --destination "${CI_REGISTRY_IMAGE}/rs-${IMAGE_BUILD_CONTEXT}:${RS_VERSION}"
+
+build_cart_image:
+  extends: .build_image
+  variables:
+    IMAGE_BUILD_CONTEXT: cart
+
+build_catalogue_image:
+  extends: .build_image
+  variables:
+    IMAGE_BUILD_CONTEXT: catalogue
+
+build_dispatch_image:
+  extends: .build_image
+  variables:
+    IMAGE_BUILD_CONTEXT: dispatch
+
+build_loadgen_image:
+  extends: .build_image
+  variables:
+    IMAGE_BUILD_CONTEXT: load-gen
+
+build_mongo_image:
+  extends: .build_image
+  variables:
+    IMAGE_BUILD_CONTEXT: mongo
+
+build_mysql_image:
+  extends: .build_image
+  variables:
+    IMAGE_BUILD_CONTEXT: mysql
+
+build_payment_image:
+  extends: .build_image
+  variables:
+    IMAGE_BUILD_CONTEXT: payment
+
+build_ratings_image:
+  extends: .build_image
+  variables:
+    IMAGE_BUILD_CONTEXT: ratings
+
+build_shipping_image:
+  extends: .build_image
+  variables:
+    IMAGE_BUILD_CONTEXT: shipping
+
+build_user_image:
+  extends: .build_image
+  variables:
+    IMAGE_BUILD_CONTEXT: user
+
+build_web_image:
+  extends: .build_image
+  variables:
+    IMAGE_BUILD_CONTEXT: web
+
+build_helm_chart:
+  stage: package
+  image:
+    name: alpine/k8s:1.31.2
+  needs:
+    - build_cart_image
+    - build_catalogue_image
+    - build_dispatch_image
+    - build_loadgen_image
+    - build_mongo_image
+    - build_mysql_image
+    - build_payment_image
+    - build_ratings_image
+    - build_shipping_image
+    - build_user_image
+    - build_web_image
+  script:
+    - cd $CI_PROJECT_DIR/K8s/helm
+    - | 
+        escaped_version=$(printf '%s\n' "${RS_VERSION}" | sed -e 's/[\/.]/\\./g')
+        sed -i "s/version\: 0\.0-0/version\: $escaped_version/" values.yaml
+    - helm package . --app-version ${RS_VERSION} --version ${RS_VERSION}
+    - helm repo add --username gitlab-ci-token --password ${CI_JOB_TOKEN} ${CI_PROJECT_NAME} ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/devel
+    - helm cm-push robot-shop-$RS_VERSION.tgz $CI_PROJECT_NAME
+
+deploy_app:
+  stage: deploy
+  image:
+    name: alpine/k8s:1.31.2
+    entrypoint: ['']
+  needs:
+    - build_helm_chart
+  script:
+    - kubectl config use-context $CI_PROJECT_PATH:test
+    - kubectl create namespace robot-shop --dry-run=client -o yaml | kubectl apply -f -
+    - kubectl create secret docker-registry regcred --docker-server=registry.gaudiy-bongalos.com --docker-username=gitlab-ci-token --docker-password=$CI_JOB_TOKEN -n robot-shop --dry-run=client -o yaml | kubectl apply -f -
+    - helm repo add --username gitlab-ci-token --password ${CI_JOB_TOKEN} ${CI_PROJECT_NAME} ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/devel
+    - helm upgrade --install robot-shop $CI_PROJECT_NAME/robot-shop -n robot-shop --wait --wait-for-jobs --timeout 10m --version $RS_VERSION
