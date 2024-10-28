@@ -6,3 +6,10 @@ registry.gaudiy-bongalos.com/demo/three-tier-architecture-demo/rs-web:e7175cc7
 # https://stackoverflow.com/questions/75112261/connect-kubernetes-to-gitlab-container-registry
 
 kubectl create secret docker-registry regcred --docker-server=registry.gaudiy-bongalos.com --docker-username=rs --docker-password=gldt-it8QayozgzZoz38nuCdS -n robot-shop
+
+  ```oras push some.private.repo/path/trivy-db:2 \
+            db.tar.gz:application/vnd.aquasec.trivy.db.layer.v1.tar+gzip \
+            --artifact-type application/vnd.aquasec.trivy.config.v1+json ```
+
+oras pull ghcr.io/aquasecurity/trivy-db:2
+oras push registry.gaudiy-bongalos.com/demo/three-tier-architecture-demo/trivy-db:2 db.tar.gz:application/vnd.aquasec.trivy.db.layer.v1.tar+gzip --artifact-type application/vnd.aquasec.trivy.config.v1+json
