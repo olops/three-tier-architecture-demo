@@ -1,10 +1,10 @@
 
 stages:
   - unittest
-  - integtest
-  - analysis
+  - code_analysis
   - package
-  - package_scan
+  - integtest
+  - security_scan
   - deploy
 
 variables:
@@ -12,7 +12,7 @@ variables:
   RS_VERSION: $RS_RELEASE_VERSION.$CI_PIPELINE_ID
 
 .sonar_scan:
-  stage: analysis
+  stage: code_analysis
   image:
     name: sonarsource/sonar-scanner-cli:latest
     entrypoint: [""]
@@ -169,6 +169,104 @@ build_web_image:
   needs:
     - sonar_scan_web
 
+.trivy_image_scan:
+  stage: security_scan
+  image:
+    name: docker.io/aquasec/trivy:latest
+    entrypoint: [""]
+  variables:
+    GIT_STRATEGY: none
+    TRIVY_USERNAME: "$CI_REGISTRY_USER"
+    TRIVY_PASSWORD: "$CI_REGISTRY_PASSWORD"
+    TRIVY_AUTH_URL: "$CI_REGISTRY"
+    TRIVY_NO_PROGRESS: "true"
+    TRIVY_CACHE_DIR: ".trivycache/"
+    FULL_IMAGE_NAME: "${CI_REGISTRY_IMAGE}/rs-${IMAGE_NAME}:${RS_VERSION}"
+  script:
+    - trivy image --db-repository registry.gaudiy-bongalos.com/demo/three-tier-architecture-demo/trivy-db --exit-code 1 --severity CRITICAL "$FULL_IMAGE_NAME"
+  cache:
+    paths:
+      - .trivycache/
+    when: 'always'
+  allow_failure: true
+
+trivy_scan_cart_image:
+  extends: .trivy_image_scan 
+  variables:
+    IMAGE_NAME: cart
+  needs:
+    - build_cart_image
+
+trivy_scan_catalogue_image:
+  extends: .trivy_image_scan 
+  variables:
+    IMAGE_NAME: catalogue
+  needs:
+    - build_catalogue_image
+
+trivy_scan_dispatch_image:
+  extends: .trivy_image_scan 
+  variables:
+    IMAGE_NAME: dispatch
+  needs:
+    - build_dispatch_image
+
+trivy_scan_loadgen_image:
+  extends: .trivy_image_scan 
+  variables:
+    IMAGE_NAME: loadgen
+  needs:
+    - build_loadgen_image
+
+trivy_scan_mongo_image:
+  extends: .trivy_image_scan 
+  variables:
+    IMAGE_NAME: mongo
+  needs:
+    - build_mongo_image
+
+trivy_scan_mysql_image:
+  extends: .trivy_image_scan 
+  variables:
+    IMAGE_NAME: mysql
+  needs:
+    - build_mysql_image
+
+trivy_scan_payment_image:
+  extends: .trivy_image_scan 
+  variables:
+    IMAGE_NAME: payment
+  needs:
+    - build_payment_image
+
+trivy_scan_ratings_image:
+  extends: .trivy_image_scan 
+  variables:
+    IMAGE_NAME: ratings
+  needs:
+    - build_ratings_image
+
+trivy_scan_shipping_image:
+  extends: .trivy_image_scan 
+  variables:
+    IMAGE_NAME: shipping
+  needs:
+    - build_shipping_image
+
+trivy_scan_user_image:
+  extends: .trivy_image_scan 
+  variables:
+    IMAGE_NAME: user
+  needs:
+    - build_user_image
+
+trivy_scan_web_image:
+  extends: .trivy_image_scan 
+  variables:
+    IMAGE_NAME: web
+  needs:
+    - build_web_image
+
 build_helm_chart:
   stage: package
   image:
@@ -195,7 +293,7 @@ build_helm_chart:
     - helm cm-push robot-shop-$RS_VERSION.tgz $CI_PROJECT_NAME
 
 trivy_scan_helm_chart:
-  stage: package_scan
+  stage: security_scan
   image:
     name: docker.io/aquasec/trivy:latest
     entrypoint: [""]
@@ -214,6 +312,16 @@ deploy_app:
     name: alpine/k8s:1.31.2
     entrypoint: ['']
   needs:
+    - trivy_scan_cart_image
+    - trivy_scan_catalogue_image
+    - trivy_scan_dispatch_image
+    - trivy_scan_mongo_image
+    - trivy_scan_mysql_image
+    - trivy_scan_payment_image
+    - trivy_scan_ratings_image
+    - trivy_scan_shipping_image
+    - trivy_scan_user_image
+    - trivy_scan_web_image
     - trivy_scan_helm_chart
   script:
     - kubectl config use-context $CI_PROJECT_PATH:default
