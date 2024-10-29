@@ -25,7 +25,7 @@ variables:
       - .sonar/cache
   script:
     - cd $TARGET_PROJECT
-    - sonar-scanner -Dsonar.host.url=https://sonarqube.gaudiy-bongalos.com -Dsonar.projectName=rs-$TARGET_PROJECT -Dsonar.projectKey=rs-$TARGET_PROJECT -Dsonar.login=$SONAR_TOKEN -Dsonar.qualitygate.wait=true
+    - sonar-scanner -Dsonar.host.url=$SONAR_URL -Dsonar.projectName=rs-$TARGET_PROJECT -Dsonar.projectKey=rs-$TARGET_PROJECT -Dsonar.token=$SONAR_TOKEN -Dsonar.qualitygate.wait=true
 
 sonar_scan_cart:
   extends: .sonar_scan
@@ -70,7 +70,7 @@ sonar_scan_shipping:
   script:
     - cd $TARGET_PROJECT
     - mvn package
-    - mvn sonar:sonar -Dsonar.host.url=https://sonarqube.gaudiy-bongalos.com -Dsonar.projectName=rs-shipping -Dsonar.projectKey=rs-shipping -Dsonar.login=$SONAR_TOKEN -Dsonar.language=java -Dsonar.sources=src -Dsonar.qualitygate.wait=true
+    - mvn sonar:sonar -Dsonar.host.url=$SONAR_URL -Dsonar.projectName=rs-shipping -Dsonar.projectKey=rs-shipping -Dsonar.token=$SONAR_TOKEN -Dsonar.language=java -Dsonar.sources=src -Dsonar.qualitygate.wait=true
 
 sonar_scan_user:
   extends: .sonar_scan
@@ -183,7 +183,7 @@ build_web_image:
     TRIVY_CACHE_DIR: ".trivycache/"
     FULL_IMAGE_NAME: "${CI_REGISTRY_IMAGE}/rs-${IMAGE_NAME}:${RS_VERSION}"
   script:
-    - trivy image --db-repository registry.gaudiy-bongalos.com/demo/three-tier-architecture-demo/trivy-db --exit-code 1 --severity CRITICAL "$FULL_IMAGE_NAME"
+    - trivy image --db-repository $CI_REGISTRY_IMAGE/trivy-db --exit-code 1 --severity CRITICAL "$FULL_IMAGE_NAME"
   cache:
     paths:
       - .trivycache/
@@ -214,7 +214,7 @@ trivy_scan_dispatch_image:
 trivy_scan_loadgen_image:
   extends: .trivy_image_scan 
   variables:
-    IMAGE_NAME: loadgen
+    IMAGE_NAME: load-gen
   needs:
     - build_loadgen_image
 
@@ -288,6 +288,8 @@ build_helm_chart:
     - | 
         escaped_version=$(printf '%s\n' "${RS_VERSION}" | sed -e 's/[\/.]/\\./g')
         sed -i "s/version\: 0\.0-0/version\: $escaped_version/" values.yaml
+        escaped_registry=$(printf '%s\n' "${CI_REGISTRY}\/demo\/$CI_PROJECT_NAME" | sed -e 's/[.]/\\./g')
+        sed -i "s/repo\: repo/repo\: $escaped_registry/" values.yaml
     - helm package . --app-version ${RS_VERSION} --version ${RS_VERSION}
     - helm repo add --username gitlab-ci-token --password ${CI_JOB_TOKEN} ${CI_PROJECT_NAME} ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/devel
     - helm cm-push robot-shop-$RS_VERSION.tgz $CI_PROJECT_NAME
@@ -326,6 +328,6 @@ deploy_app:
   script:
     - kubectl config use-context $CI_PROJECT_PATH:default
     - kubectl create namespace robot-shop --dry-run=client -o yaml | kubectl apply -f -
-    - kubectl create secret docker-registry regcred --docker-server=registry.gaudiy-bongalos.com --docker-username=gitlab-ci-token --docker-password=$CI_JOB_TOKEN -n robot-shop --dry-run=client -o yaml | kubectl apply -f -
+    - kubectl create secret docker-registry regcred --docker-server=$CI_REGISTRY --docker-username=gitlab-ci-token --docker-password=$CI_JOB_TOKEN -n robot-shop --dry-run=client -o yaml | kubectl apply -f -
     - helm repo add --username gitlab-ci-token --password ${CI_JOB_TOKEN} ${CI_PROJECT_NAME} ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/devel
     - helm upgrade --install robot-shop $CI_PROJECT_NAME/robot-shop -n robot-shop --wait --wait-for-jobs --timeout 10m --version $RS_VERSION
