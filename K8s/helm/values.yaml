@@ -1,7 +1,7 @@
 # Registry and repository for Docker images
 # Default is docker/robotshop/image:latest
 image:
-  repo: registry.gaudiy-bongalos.com/demo/three-tier-architecture-demo
+  repo: repo
   version: 0.0-0
   pullPolicy: IfNotPresent
 
