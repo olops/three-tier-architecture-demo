@@ -1,0 +1,173 @@
+[0KRunning with gitlab-runner 17.2.0 (6428c288)[0;m
+[0K  on gitlab-gitlab-runner-686f664dc9-tsh8g K2MrJjiw, system ID: r_4Uk0hc1POruo[0;m
+section_start:1730236138:prepare_executor
+[0K[0K[36;1mPreparing the "kubernetes" executor[0;m[0;m
+[0KUsing Kubernetes namespace: runner[0;m
+[0KUsing Kubernetes executor with image sonarsource/sonar-scanner-cli:latest ...[0;m
+[0KUsing attach strategy to execute scripts...[0;m
+section_end:1730236138:prepare_executor
+[0Ksection_start:1730236138:prepare_script
+[0K[0K[36;1mPreparing environment[0;m[0;m
+[0KUsing FF_USE_POD_ACTIVE_DEADLINE_SECONDS, the Pod activeDeadlineSeconds will be set to the job timeout: 1h0m0s...[0;m
+Waiting for pod runner/runner-k2mrjjiw-project-1-concurrent-0-ya9t4o7l to be running, status is Pending
+Waiting for pod runner/runner-k2mrjjiw-project-1-concurrent-0-ya9t4o7l to be running, status is Pending
+	ContainersNotReady: "containers with unready status: [build helper]"
+	ContainersNotReady: "containers with unready status: [build helper]"
+Running on runner-k2mrjjiw-project-1-concurrent-0-ya9t4o7l via gitlab-gitlab-runner-686f664dc9-tsh8g...
+
+section_end:1730236145:prepare_script
+[0Ksection_start:1730236145:get_sources
+[0K[0K[36;1mGetting source from Git repository[0;m[0;m
+[32;1mFetching changes...[0;m
+Initialized empty Git repository in /builds/demo/three-tier-architecture-demo/.git/
+[32;1mCreated fresh repository.[0;m
+[32;1mChecking out dd41cea5 as detached HEAD (ref is develop)...[0;m
+
+[32;1mSkipping Git submodules setup[0;m
+
+section_end:1730236152:get_sources
+[0Ksection_start:1730236152:restore_cache
+[0K[0K[36;1mRestoring cache[0;m[0;m
+[32;1mChecking cache for sonar_scan_cart-1-non_protected...[0;m
+Downloading cache from https://minio-test.gaudiy-bongalos.com/runner-cache/gitlab-runner/project/1/sonar_scan_cart-1-non_protected[0;m  ETag[0;m="424475f0ce36d2bae2d449c059de8dc6"
+[32;1mSuccessfully extracted cache[0;m
+
+section_end:1730236163:restore_cache
+[0Ksection_start:1730236163:step_script
+[0K[0K[36;1mExecuting "step_script" stage of the job script[0;m[0;m
+[32;1m$ cd $TARGET_PROJECT[0;m
+[32;1m$ sonar-scanner -Dsonar.host.url=$SONAR_URL -Dsonar.projectName=rs-$TARGET_PROJECT -Dsonar.projectKey=rs-$TARGET_PROJECT -Dsonar.token=$SONAR_TOKEN -Dsonar.qualitygate.wait=true[0;m
+21:09:24.998 INFO  Scanner configuration file: /opt/sonar-scanner/conf/sonar-scanner.properties
+21:09:25.008 INFO  Project root configuration file: NONE
+21:09:25.046 INFO  SonarScanner CLI 6.2.1.4610
+21:09:25.049 INFO  Java 17.0.12 Amazon.com Inc. (64-bit)
+21:09:25.051 INFO  Linux 6.1.100+ amd64
+21:09:25.135 INFO  User cache: /builds/demo/three-tier-architecture-demo/.sonar/cache
+21:09:28.811 INFO  JRE provisioning: os[linux], arch[x86_64]
+21:09:29.148 INFO  Communicating with SonarQube Server 10.6.0.92116
+21:09:29.845 INFO  Starting SonarScanner Engine...
+21:09:29.848 INFO  Java 17.0.11 Eclipse Adoptium (64-bit)
+21:09:32.757 INFO  Load global settings
+21:09:33.301 INFO  Load global settings (done) | time=544ms
+21:09:33.314 INFO  Server id: EA8D9556-AZLY_Xeioy1s_Q5JIO8J
+21:09:33.344 INFO  Loading required plugins
+21:09:33.352 INFO  Load plugins index
+21:09:33.423 INFO  Load plugins index (done) | time=74ms
+21:09:33.431 INFO  Load/download plugins
+21:09:33.598 INFO  Load/download plugins (done) | time=171ms
+21:09:34.278 INFO  Process project properties
+21:09:34.280 INFO  Process project properties (done) | time=1ms
+21:09:34.293 INFO  Project key: rs-cart
+21:09:34.302 INFO  Base dir: /builds/demo/three-tier-architecture-demo/cart
+21:09:34.305 INFO  Working dir: /builds/demo/three-tier-architecture-demo/cart/.scannerwork
+21:09:34.343 INFO  Load project settings for component key: 'rs-cart'
+21:09:34.411 INFO  Load project settings for component key: 'rs-cart' (done) | time=76ms
+21:09:34.533 INFO  Load quality profiles
+21:09:34.664 INFO  Load quality profiles (done) | time=131ms
+21:09:34.707 INFO  Auto-configuring with CI 'Gitlab CI'
+21:09:34.759 INFO  Load active rules
+21:09:40.492 INFO  Load active rules (done) | time=5733ms
+21:09:40.510 INFO  Load analysis cache
+21:09:40.571 INFO  Load analysis cache | time=61ms
+21:09:40.781 INFO  Preprocessing files...
+21:09:41.044 INFO  3 languages detected in 3 preprocessed files
+21:09:41.048 INFO  0 files ignored because of scm ignore settings
+21:09:41.054 INFO  Loading plugins for detected languages
+21:09:41.056 INFO  Load/download plugins
+21:09:41.066 INFO  Load/download plugins (done) | time=10ms
+21:09:41.429 INFO  Load project repositories
+21:09:41.470 INFO  Load project repositories (done) | time=41ms
+21:09:41.520 INFO  Indexing files...
+21:09:41.525 INFO  Project configuration:
+21:09:41.619 INFO  3 files indexed
+21:09:41.623 INFO  Quality profile for docker: Sonar way
+21:09:41.625 INFO  Quality profile for js: Sonar way
+21:09:41.627 INFO  Quality profile for json: Sonar way
+21:09:41.632 INFO  ------------- Run sensors on module rs-cart
+21:09:41.717 INFO  Load metrics repository
+21:09:41.792 INFO  Load metrics repository (done) | time=75ms
+21:09:43.211 INFO  Sensor HTML [web]
+21:09:43.220 INFO  Sensor HTML [web] (done) | time=9ms
+21:09:43.221 INFO  Sensor JaCoCo XML Report Importer [jacoco]
+21:09:43.230 INFO  'sonar.coverage.jacoco.xmlReportPaths' is not defined. Using default locations: target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml,build/reports/jacoco/test/jacocoTestReport.xml
+21:09:43.233 INFO  No report imported, no coverage information will be imported by JaCoCo XML Report Importer
+21:09:43.235 INFO  Sensor JaCoCo XML Report Importer [jacoco] (done) | time=15ms
+21:09:43.237 INFO  Sensor IaC CloudFormation Sensor [iac]
+21:09:43.275 INFO  0 source files to be analyzed
+21:09:43.301 INFO  0/0 source files have been analyzed
+21:09:43.304 INFO  Sensor IaC CloudFormation Sensor [iac] (done) | time=65ms
+21:09:43.305 INFO  Sensor IaC AzureResourceManager Sensor [iac]
+21:09:43.314 INFO  0 source files to be analyzed
+21:09:43.508 INFO  0/0 source files have been analyzed
+21:09:43.511 INFO  Sensor IaC AzureResourceManager Sensor [iac] (done) | time=206ms
+21:09:43.514 INFO  Sensor Java Config Sensor [iac]
+21:09:43.531 INFO  0 source files to be analyzed
+21:09:43.533 INFO  0/0 source files have been analyzed
+21:09:43.534 INFO  Sensor Java Config Sensor [iac] (done) | time=20ms
+21:09:43.535 INFO  Sensor JavaScript/TypeScript analysis [javascript]
+21:09:47.312 INFO  Detected os: Linux arch: amd64 alpine: false. Platform: LINUX_X64
+21:09:51.531 INFO  Using embedded Node.js runtime
+21:09:51.532 INFO  Using Node.js executable: '/builds/demo/three-tier-architecture-demo/.sonar/js/node-runtime/node'.
+21:09:55.816 INFO  Memory configuration: OS (7949 MB), Node.js (2096 MB).
+21:10:00.150 INFO  Found 0 tsconfig.json file(s): []
+21:10:00.175 INFO  Creating TypeScript program
+21:10:00.176 INFO  TypeScript configuration file /tmp/tmp-136-VcY16cq0aedP
+21:10:00.182 INFO  1 source file to be analyzed
+21:10:01.279 INFO  Starting analysis with current program
+21:10:03.601 INFO  Analyzed 1 file(s) with current program
+21:10:03.608 INFO  1/1 source file has been analyzed
+21:10:03.608 INFO  Hit the cache for 0 out of 1
+21:10:03.611 INFO  Miss the cache for 1 out of 1: ANALYSIS_MODE_INELIGIBLE [1/1]
+21:10:03.612 INFO  Sensor JavaScript/TypeScript analysis [javascript] (done) | time=20077ms
+21:10:03.613 INFO  Sensor CSS Rules [javascript]
+21:10:03.613 INFO  No CSS, PHP, HTML or VueJS files are found in the project. CSS analysis is skipped.
+21:10:03.617 INFO  Sensor CSS Rules [javascript] (done) | time=1ms
+21:10:03.619 INFO  Sensor IaC Docker Sensor [iac]
+21:10:03.625 INFO  1 source file to be analyzed
+21:10:03.903 INFO  1/1 source file has been analyzed
+21:10:03.904 INFO  Sensor IaC Docker Sensor [iac] (done) | time=290ms
+21:10:03.904 INFO  Sensor TextAndSecretsSensor [text]
+21:10:03.904 INFO  Available processors: 2
+21:10:03.905 INFO  Using 2 threads for analysis.
+21:10:05.435 INFO  The property "sonar.tests" is not set. To improve the analysis accuracy, we categorize a file as a test file if any of the following is true:
+  * The filename starts with "test"
+  * The filename contains "test." or "tests."
+  * Any directory in the file path is named: "doc", "docs", "test" or "tests"
+  * Any directory in the file path has a name ending in "test" or "tests"
+
+21:10:05.552 INFO  Using git CLI to retrieve untracked files
+21:10:05.570 WARN  Analyzing only language associated files, make sure to run the analysis inside a git repository to make use of inclusions specified via "sonar.text.inclusions"
+21:10:05.746 INFO  3 source files to be analyzed
+21:10:06.161 INFO  3/3 source files have been analyzed
+21:10:06.161 INFO  Sensor TextAndSecretsSensor [text] (done) | time=2253ms
+21:10:06.185 INFO  ------------- Run sensors on project
+21:10:06.545 INFO  Sensor Zero Coverage Sensor
+21:10:06.588 INFO  Sensor Zero Coverage Sensor (done) | time=46ms
+21:10:06.625 INFO  CPD Executor Calculating CPD for 1 file
+21:10:06.669 INFO  CPD Executor CPD calculation finished (done) | time=42ms
+21:10:06.679 INFO  SCM revision ID 'dd41cea551809af639b4ccfdec1b63721e9c41bb'
+21:10:06.917 INFO  Analysis report generated in 202ms, dir size=241.3 kB
+21:10:06.960 INFO  Analysis report compressed in 42ms, zip size=43.4 kB
+21:10:07.030 INFO  Analysis report uploaded in 68ms
+21:10:07.035 INFO  ------------- Check Quality Gate status
+21:10:07.037 INFO  Waiting for the analysis report to be processed (max 300s)
+21:10:17.184 INFO  QUALITY GATE STATUS: PASSED - View details on https://sonarqube.gaudiy-bongalos.com/dashboard?id=rs-cart
+21:10:18.924 INFO  Analysis total time: 45.143 s
+21:10:18.927 INFO  SonarScanner Engine completed successfully
+21:10:19.298 INFO  EXECUTION SUCCESS
+21:10:19.301 INFO  Total time: 54.313s
+
+section_end:1730236220:step_script
+[0Ksection_start:1730236220:archive_cache
+[0K[0K[36;1mSaving cache for successful job[0;m[0;m
+[32;1mCreating cache sonar_scan_cart-1-non_protected...[0;m
+.sonar/cache: found 348 matching artifact files and directories[0;m 
+Archive is up to date!                            [0;m 
+[32;1mCreated cache[0;m
+
+section_end:1730236220:archive_cache
+[0Ksection_start:1730236220:cleanup_file_variables
+[0K[0K[36;1mCleaning up project directory and file based variables[0;m[0;m
+
+section_end:1730236221:cleanup_file_variables
+[0K[32;1mJob succeeded[0;m

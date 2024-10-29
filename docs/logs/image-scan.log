@@ -1,0 +1,128 @@
+[0KRunning with gitlab-runner 17.2.0 (6428c288)[0;m
+[0K  on gitlab-gitlab-runner-686f664dc9-tsh8g K2MrJjiw, system ID: r_4Uk0hc1POruo[0;m
+section_start:1730236264:prepare_executor
+[0K[0K[36;1mPreparing the "kubernetes" executor[0;m[0;m
+[0KUsing Kubernetes namespace: runner[0;m
+[0KUsing Kubernetes executor with image docker.io/aquasec/trivy:latest ...[0;m
+[0KUsing attach strategy to execute scripts...[0;m
+section_end:1730236264:prepare_executor
+[0Ksection_start:1730236264:prepare_script
+[0K[0K[36;1mPreparing environment[0;m[0;m
+[0KUsing FF_USE_POD_ACTIVE_DEADLINE_SECONDS, the Pod activeDeadlineSeconds will be set to the job timeout: 1h0m0s...[0;m
+Waiting for pod runner/runner-k2mrjjiw-project-1-concurrent-3-4xd22m5m to be running, status is Pending
+Waiting for pod runner/runner-k2mrjjiw-project-1-concurrent-3-4xd22m5m to be running, status is Pending
+	ContainersNotInitialized: "containers with incomplete status: [init-permissions]"
+	ContainersNotReady: "containers with unready status: [build helper]"
+	ContainersNotReady: "containers with unready status: [build helper]"
+Waiting for pod runner/runner-k2mrjjiw-project-1-concurrent-3-4xd22m5m to be running, status is Pending
+	ContainersNotInitialized: "containers with incomplete status: [init-permissions]"
+	ContainersNotReady: "containers with unready status: [build helper]"
+	ContainersNotReady: "containers with unready status: [build helper]"
+Waiting for pod runner/runner-k2mrjjiw-project-1-concurrent-3-4xd22m5m to be running, status is Pending
+	ContainersNotInitialized: "containers with incomplete status: [init-permissions]"
+	ContainersNotReady: "containers with unready status: [build helper]"
+	ContainersNotReady: "containers with unready status: [build helper]"
+Waiting for pod runner/runner-k2mrjjiw-project-1-concurrent-3-4xd22m5m to be running, status is Pending
+	ContainersNotReady: "containers with unready status: [build helper]"
+	ContainersNotReady: "containers with unready status: [build helper]"
+Waiting for pod runner/runner-k2mrjjiw-project-1-concurrent-3-4xd22m5m to be running, status is Pending
+	ContainersNotReady: "containers with unready status: [build helper]"
+	ContainersNotReady: "containers with unready status: [build helper]"
+Waiting for pod runner/runner-k2mrjjiw-project-1-concurrent-3-4xd22m5m to be running, status is Pending
+	ContainersNotReady: "containers with unready status: [build helper]"
+	ContainersNotReady: "containers with unready status: [build helper]"
+Waiting for pod runner/runner-k2mrjjiw-project-1-concurrent-3-4xd22m5m to be running, status is Pending
+	ContainersNotReady: "containers with unready status: [build helper]"
+	ContainersNotReady: "containers with unready status: [build helper]"
+Waiting for pod runner/runner-k2mrjjiw-project-1-concurrent-3-4xd22m5m to be running, status is Pending
+	ContainersNotReady: "containers with unready status: [build helper]"
+	ContainersNotReady: "containers with unready status: [build helper]"
+Waiting for pod runner/runner-k2mrjjiw-project-1-concurrent-3-4xd22m5m to be running, status is Pending
+	ContainersNotReady: "containers with unready status: [build helper]"
+	ContainersNotReady: "containers with unready status: [build helper]"
+Waiting for pod runner/runner-k2mrjjiw-project-1-concurrent-3-4xd22m5m to be running, status is Pending
+	ContainersNotReady: "containers with unready status: [build helper]"
+	ContainersNotReady: "containers with unready status: [build helper]"
+Waiting for pod runner/runner-k2mrjjiw-project-1-concurrent-3-4xd22m5m to be running, status is Pending
+	ContainersNotReady: "containers with unready status: [build helper]"
+	ContainersNotReady: "containers with unready status: [build helper]"
+Waiting for pod runner/runner-k2mrjjiw-project-1-concurrent-3-4xd22m5m to be running, status is Pending
+	ContainersNotReady: "containers with unready status: [build helper]"
+	ContainersNotReady: "containers with unready status: [build helper]"
+Running on runner-k2mrjjiw-project-1-concurrent-3-4xd22m5m via gitlab-gitlab-runner-686f664dc9-tsh8g...
+
+section_end:1730236304:prepare_script
+[0Ksection_start:1730236304:get_sources
+[0K[0K[36;1mGetting source from Git repository[0;m[0;m
+[32;1mSkipping Git repository setup[0;m
+[32;1mSkipping Git checkout[0;m
+[32;1mSkipping Git submodules setup[0;m
+
+section_end:1730236305:get_sources
+[0Ksection_start:1730236305:restore_cache
+[0K[0K[36;1mRestoring cache[0;m[0;m
+[32;1mChecking cache for default-1-non_protected...[0;m
+Downloading cache from https://minio-test.gaudiy-bongalos.com/runner-cache/gitlab-runner/project/1/default-1-non_protected[0;m  ETag[0;m="16bafeb93ee3e5b7f96dd84a1b417221"
+[32;1mSuccessfully extracted cache[0;m
+
+section_end:1730236345:restore_cache
+[0Ksection_start:1730236345:step_script
+[0K[0K[36;1mExecuting "step_script" stage of the job script[0;m[0;m
+[32;1m$ trivy image --db-repository $CI_REGISTRY_IMAGE/trivy-db --exit-code 1 --severity CRITICAL "$FULL_IMAGE_NAME"[0;m
+2024-10-29T21:12:25Z	INFO	Adding schema version to the DB repository for backward compatibility	repository="registry-test.gaudiy-bongalos.com/demo/three-tier-architecture-demo/trivy-db:2"
+2024-10-29T21:12:25Z	INFO	[vuln] Vulnerability scanning is enabled
+2024-10-29T21:12:25Z	INFO	[secret] Secret scanning is enabled
+2024-10-29T21:12:25Z	INFO	[secret] If your scanning is slow, please try '--scanners vuln' to disable secret scanning
+2024-10-29T21:12:25Z	INFO	[secret] Please see also https://aquasecurity.github.io/trivy/v0.56/docs/scanner/secret#recommendation for faster secret detection
+2024-10-29T21:12:46Z	INFO	[python] License acquired from METADATA classifiers may be subject to additional terms	name="mercurial" version="6.3.2"
+2024-10-29T21:12:46Z	INFO	Detected OS	family="debian" version="12.7"
+2024-10-29T21:12:46Z	INFO	[debian] Detecting vulnerabilities...	os_version="12" pkg_num=205
+2024-10-29T21:12:46Z	INFO	Number of language-specific files	num=21
+2024-10-29T21:12:46Z	INFO	[gobinary] Detecting vulnerabilities...
+2024-10-29T21:12:46Z	INFO	[node-pkg] Detecting vulnerabilities...
+2024-10-29T21:12:46Z	WARN	Using severities from other vendors for some vulnerabilities. Read https://aquasecurity.github.io/trivy/v0.56/docs/scanner/vulnerability#severity-selection for details.
+
+For OSS Maintainers: VEX Notice
+--------------------------------
+If you're an OSS maintainer and Trivy has detected vulnerabilities in your project that you believe are not actually exploitable, consider issuing a VEX (Vulnerability Exploitability eXchange) statement.
+VEX allows you to communicate the actual status of vulnerabilities in your project, improving security transparency and reducing false positives for your users.
+Learn more and start using VEX: https://aquasecurity.github.io/trivy/v0.56/docs/supply-chain/vex/repo#publishing-vex-documents
+
+To disable this notice, set the TRIVY_DISABLE_VEX_NOTICE environment variable.
+
+
+registry-test.gaudiy-bongalos.com/demo/three-tier-architecture-demo/rs-dispatch:1.0.18 (debian 12.7)
+====================================================================================================
+Total: 3 (CRITICAL: 3)
+
+┌────────────────┬────────────────┬──────────┬──────────────┬───────────────────┬───────────────┬────────────────────────────────────────────────────────┐
+│    Library     │ Vulnerability  │ Severity │    Status    │ Installed Version │ Fixed Version │                         Title                          │
+├────────────────┼────────────────┼──────────┼──────────────┼───────────────────┼───────────────┼────────────────────────────────────────────────────────┤
+│ linux-libc-dev │ CVE-2024-47685 │ CRITICAL │ affected     │ 6.1.112-1         │               │ kernel: netfilter: nf_reject_ipv6: fix                 │
+│                │                │          │              │                   │               │ nf_reject_ip6_tcphdr_put()                             │
+│                │                │          │              │                   │               │ https://avd.aquasec.com/nvd/cve-2024-47685             │
+├────────────────┼────────────────┤          │              ├───────────────────┼───────────────┼────────────────────────────────────────────────────────┤
+│ wget           │ CVE-2024-38428 │          │              │ 1.21.3-1+b2       │               │ wget: Misinterpretation of input may lead to improper  │
+│                │                │          │              │                   │               │ behavior                                               │
+│                │                │          │              │                   │               │ https://avd.aquasec.com/nvd/cve-2024-38428             │
+├────────────────┼────────────────┤          ├──────────────┼───────────────────┼───────────────┼────────────────────────────────────────────────────────┤
+│ zlib1g         │ CVE-2023-45853 │          │ will_not_fix │ 1:1.2.13.dfsg-1   │               │ zlib: integer overflow and resultant heap-based buffer │
+│                │                │          │              │                   │               │ overflow in zipOpenNewFileInZip4_6                     │
+│                │                │          │              │                   │               │ https://avd.aquasec.com/nvd/cve-2023-45853             │
+└────────────────┴────────────────┴──────────┴──────────────┴───────────────────┴───────────────┴────────────────────────────────────────────────────────┘
+
+section_end:1730236367:step_script
+[0Ksection_start:1730236367:archive_cache_on_failure
+[0K[0K[36;1mSaving cache for failed job[0;m[0;m
+[32;1mCreating cache default-1-non_protected...[0;m
+.trivycache/: found 9 matching artifact files and directories[0;m 
+Uploading cache.zip to https://minio-test.gaudiy-bongalos.com/runner-cache/gitlab-runner/project/1/default-1-non_protected[0;m 
+[32;1mCreated cache[0;m
+
+section_end:1730236430:archive_cache_on_failure
+[0Ksection_start:1730236430:cleanup_file_variables
+[0K[0K[36;1mCleaning up project directory and file based variables[0;m[0;m
+
+section_end:1730236430:cleanup_file_variables
+[0K[31;1mERROR: Job failed: command terminated with exit code 1
+[0;m

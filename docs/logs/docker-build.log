@@ -1,0 +1,87 @@
+[0KRunning with gitlab-runner 17.2.0 (6428c288)[0;m
+[0K  on gitlab-gitlab-runner-686f664dc9-tsh8g K2MrJjiw, system ID: r_4Uk0hc1POruo[0;m
+section_start:1730236226:prepare_executor
+[0K[0K[36;1mPreparing the "kubernetes" executor[0;m[0;m
+[0KUsing Kubernetes namespace: runner[0;m
+[0KUsing Kubernetes executor with image gcr.io/kaniko-project/executor:v1.23.2-debug ...[0;m
+[0KUsing attach strategy to execute scripts...[0;m
+section_end:1730236226:prepare_executor
+[0Ksection_start:1730236226:prepare_script
+[0K[0K[36;1mPreparing environment[0;m[0;m
+[0KUsing FF_USE_POD_ACTIVE_DEADLINE_SECONDS, the Pod activeDeadlineSeconds will be set to the job timeout: 1h0m0s...[0;m
+Waiting for pod runner/runner-k2mrjjiw-project-1-concurrent-0-ic9xvw7j to be running, status is Pending
+Waiting for pod runner/runner-k2mrjjiw-project-1-concurrent-0-ic9xvw7j to be running, status is Pending
+	Unschedulable: "0/11 nodes are available: 1 Insufficient memory, 10 Insufficient cpu. preemption: 0/11 nodes are available: 11 No preemption victims found for incoming pod."
+Waiting for pod runner/runner-k2mrjjiw-project-1-concurrent-0-ic9xvw7j to be running, status is Pending
+	Unschedulable: "0/11 nodes are available: 1 Insufficient memory, 10 Insufficient cpu. preemption: 0/11 nodes are available: 11 No preemption victims found for incoming pod."
+Waiting for pod runner/runner-k2mrjjiw-project-1-concurrent-0-ic9xvw7j to be running, status is Pending
+	Unschedulable: "0/11 nodes are available: 1 Insufficient memory, 10 Insufficient cpu. preemption: 0/11 nodes are available: 11 No preemption victims found for incoming pod."
+Waiting for pod runner/runner-k2mrjjiw-project-1-concurrent-0-ic9xvw7j to be running, status is Pending
+	Unschedulable: "0/11 nodes are available: 1 Insufficient memory, 10 Insufficient cpu. preemption: 0/11 nodes are available: 11 No preemption victims found for incoming pod."
+Waiting for pod runner/runner-k2mrjjiw-project-1-concurrent-0-ic9xvw7j to be running, status is Pending
+	Unschedulable: "0/11 nodes are available: 1 Insufficient memory, 10 Insufficient cpu. preemption: 0/11 nodes are available: 11 No preemption victims found for incoming pod."
+Waiting for pod runner/runner-k2mrjjiw-project-1-concurrent-0-ic9xvw7j to be running, status is Pending
+	Unschedulable: "0/11 nodes are available: 1 Insufficient memory, 10 Insufficient cpu. preemption: 0/11 nodes are available: 11 No preemption victims found for incoming pod."
+Waiting for pod runner/runner-k2mrjjiw-project-1-concurrent-0-ic9xvw7j to be running, status is Pending
+	ContainersNotReady: "containers with unready status: [build helper]"
+	ContainersNotReady: "containers with unready status: [build helper]"
+Running on runner-k2mrjjiw-project-1-concurrent-0-ic9xvw7j via gitlab-gitlab-runner-686f664dc9-tsh8g...
+
+section_end:1730236251:prepare_script
+[0Ksection_start:1730236251:get_sources
+[0K[0K[36;1mGetting source from Git repository[0;m[0;m
+[32;1mFetching changes with git depth set to 20...[0;m
+Initialized empty Git repository in /builds/demo/three-tier-architecture-demo/.git/
+[32;1mCreated fresh repository.[0;m
+[32;1mChecking out dd41cea5 as detached HEAD (ref is develop)...[0;m
+
+[32;1mSkipping Git submodules setup[0;m
+
+section_end:1730236253:get_sources
+[0Ksection_start:1730236253:step_script
+[0K[0K[36;1mExecuting "step_script" stage of the job script[0;m[0;m
+[32;1m$ /kaniko/executor --context "${CI_PROJECT_DIR}/${IMAGE_BUILD_CONTEXT}" --cache=true --cache-ttl=168h --destination "${CI_REGISTRY_IMAGE}/rs-${IMAGE_BUILD_CONTEXT}:${RS_VERSION}"[0;m
+[36mINFO[0m[0000] Retrieving image manifest node:14            
+[36mINFO[0m[0000] Retrieving image node:14 from registry index.docker.io 
+[36mINFO[0m[0001] Retrieving image manifest node:14            
+[36mINFO[0m[0001] Returning cached image manifest              
+[36mINFO[0m[0001] Built cross stage deps: map[]                
+[36mINFO[0m[0001] Retrieving image manifest node:14            
+[36mINFO[0m[0001] Returning cached image manifest              
+[36mINFO[0m[0001] Retrieving image manifest node:14            
+[36mINFO[0m[0001] Returning cached image manifest              
+[36mINFO[0m[0001] Executing 0 build triggers                   
+[36mINFO[0m[0001] Building stage 'node:14' [idx: '0', base-idx: '-1'] 
+[36mINFO[0m[0001] Cmd: EXPOSE                                  
+[36mINFO[0m[0001] Adding exposed port: 8080/tcp                
+[36mINFO[0m[0001] Checking for cached layer registry-test.gaudiy-bongalos.com/demo/three-tier-architecture-demo/rs-cart/cache:21f468fb1480aa9bad4e3dbd53b04ee3164291ac17797b38ffaa3e9c3779d9cf... 
+[36mINFO[0m[0002] Using caching version of cmd: RUN npm install 
+[36mINFO[0m[0002] Unpacking rootfs as cmd COPY package.json /opt/server/ requires it. 
+[36mINFO[0m[0024] ENV INSTANA_AUTO_PROFILE true                
+[36mINFO[0m[0024] No files changed in this command, skipping snapshotting. 
+[36mINFO[0m[0024] EXPOSE 8080                                  
+[36mINFO[0m[0024] Cmd: EXPOSE                                  
+[36mINFO[0m[0024] Adding exposed port: 8080/tcp                
+[36mINFO[0m[0024] No files changed in this command, skipping snapshotting. 
+[36mINFO[0m[0024] WORKDIR /opt/server                          
+[36mINFO[0m[0024] Cmd: workdir                                 
+[36mINFO[0m[0024] Changed working directory to /opt/server     
+[36mINFO[0m[0024] Creating directory /opt/server with uid -1 and gid -1 
+[36mINFO[0m[0024] Taking snapshot of files...                  
+[36mINFO[0m[0024] COPY package.json /opt/server/               
+[36mINFO[0m[0024] Taking snapshot of files...                  
+[36mINFO[0m[0024] RUN npm install                              
+[36mINFO[0m[0024] Found cached layer, extracting to filesystem 
+[36mINFO[0m[0026] COPY server.js /opt/server/                  
+[36mINFO[0m[0026] Taking snapshot of files...                  
+[36mINFO[0m[0026] CMD ["node", "server.js"]                    
+[36mINFO[0m[0026] No files changed in this command, skipping snapshotting. 
+[36mINFO[0m[0026] Pushing image to registry-test.gaudiy-bongalos.com/demo/three-tier-architecture-demo/rs-cart:1.0.18 
+[36mINFO[0m[0026] Pushed registry-test.gaudiy-bongalos.com/demo/three-tier-architecture-demo/rs-cart@sha256:f8fdd48a3ffcff03f546e718fb72a5f0d72e8c0ded2d1fc6787eb854911d3682 
+
+section_end:1730236280:step_script
+[0Ksection_start:1730236280:cleanup_file_variables
+[0K[0K[36;1mCleaning up project directory and file based variables[0;m[0;m
+
+section_end:1730236280:cleanup_file_variables
+[0K[32;1mJob succeeded[0;m
