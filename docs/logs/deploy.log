@@ -1,0 +1,54 @@
+[0KRunning with gitlab-runner 17.2.0 (6428c288)[0;m
+[0K  on gitlab-gitlab-runner-686f664dc9-kzrkz FcmVoCWy, system ID: r_RGNrVn3r1659[0;m
+section_start:1732054382:prepare_executor
+[0K[0K[36;1mPreparing the "kubernetes" executor[0;m[0;m
+[0KUsing Kubernetes namespace: runner[0;m
+[0KUsing Kubernetes executor with image alpine/k8s:1.31.2 ...[0;m
+[0KUsing attach strategy to execute scripts...[0;m
+section_end:1732054382:prepare_executor
+[0Ksection_start:1732054382:prepare_script
+[0K[0K[36;1mPreparing environment[0;m[0;m
+[0KUsing FF_USE_POD_ACTIVE_DEADLINE_SECONDS, the Pod activeDeadlineSeconds will be set to the job timeout: 1h0m0s...[0;m
+Waiting for pod runner/runner-fcmvocwy-project-1-concurrent-0-m0cs8nt4 to be running, status is Pending
+Running on runner-fcmvocwy-project-1-concurrent-0-m0cs8nt4 via gitlab-gitlab-runner-686f664dc9-kzrkz...
+
+section_end:1732054386:prepare_script
+[0Ksection_start:1732054386:get_sources
+[0K[0K[36;1mGetting source from Git repository[0;m[0;m
+[32;1mFetching changes with git depth set to 20...[0;m
+Initialized empty Git repository in /builds/demo/three-tier-architecture-demo/.git/
+[32;1mCreated fresh repository.[0;m
+[32;1mChecking out 848746e4 as detached HEAD (ref is master)...[0;m
+
+[32;1mSkipping Git submodules setup[0;m
+
+section_end:1732054388:get_sources
+[0Ksection_start:1732054388:step_script
+[0K[0K[36;1mExecuting "step_script" stage of the job script[0;m[0;m
+[32;1m$ kubectl config use-context $CI_PROJECT_PATH:default[0;m
+Switched to context "demo/three-tier-architecture-demo:default".
+[32;1m$ kubectl create namespace robot-shop --dry-run=client -o yaml | kubectl apply -f -[0;m
+namespace/robot-shop created
+[32;1m$ kubectl create secret docker-registry regcred --docker-server=$CI_REGISTRY --docker-username=gitlab-ci-token --docker-password=$CI_JOB_TOKEN -n robot-shop --dry-run=client -o yaml | kubectl apply -f -[0;m
+secret/regcred created
+[32;1m$ helm repo add --username gitlab-ci-token --password ${CI_JOB_TOKEN} ${CI_PROJECT_NAME} ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/devel[0;m
+WARNING: Kubernetes configuration file is group-readable. This is insecure. Location: /builds/demo/three-tier-architecture-demo.tmp/KUBECONFIG
+WARNING: Kubernetes configuration file is world-readable. This is insecure. Location: /builds/demo/three-tier-architecture-demo.tmp/KUBECONFIG
+"three-tier-architecture-demo" has been added to your repositories
+[32;1m$ helm upgrade --install robot-shop $CI_PROJECT_NAME/robot-shop -n robot-shop --wait --wait-for-jobs --timeout 10m --version $RS_VERSION[0;m
+WARNING: Kubernetes configuration file is group-readable. This is insecure. Location: /builds/demo/three-tier-architecture-demo.tmp/KUBECONFIG
+WARNING: Kubernetes configuration file is world-readable. This is insecure. Location: /builds/demo/three-tier-architecture-demo.tmp/KUBECONFIG
+Release "robot-shop" does not exist. Installing it now.
+NAME: robot-shop
+LAST DEPLOYED: Tue Nov 19 22:13:11 2024
+NAMESPACE: robot-shop
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+
+section_end:1732054721:step_script
+[0Ksection_start:1732054721:cleanup_file_variables
+[0K[0K[36;1mCleaning up project directory and file based variables[0;m[0;m
+
+section_end:1732054722:cleanup_file_variables
+[0K[32;1mJob succeeded[0;m
