@@ -1,4 +1,10 @@
 
+## Applicaiton
+
+once deployed, can access the application via:
+
+url: https://robot-shop.`BASE_DOMAIN`
+
 ## Gitlab CI
 
 ### Overview
